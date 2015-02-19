@@ -19,3 +19,15 @@ test_that('calculate.value.matrix labels col names using first.sequence and row 
     expect_that(expected.cols, equals(colnames(output.matrix)))
     expect_that(expected.rows, equals(rownames(output.matrix)))
 })
+
+test_that('first row of value matrix generated is 0 thru row-length - 1', {
+    first.sequence <- c('a', 'b', 'c', 'd', 'e')
+    second.sequence <- c('a', 'b')
+
+    output.matrix <- calculate.value.matrix(first.sequence, second.sequence)
+    expect_that(output.matrix[1,1],'0')
+    expect_that(output.matrix[1,2],'1')
+    expect_that(output.matrix[1,3],'2')
+    expect_that(output.matrix[1,4],'3')
+    expect_that(output.matrix[1,5],'4')
+})
