@@ -4,5 +4,5 @@ mm <- function(first.letter, second.letter) {
     if (nchar(second.letter) != 1)
         stop('second.letter arg wrong length - should be single character')
 
-    if (first.letter == second.letter) 1 else 0
+    if (first.letter == second.letter) 0 else 1
 }

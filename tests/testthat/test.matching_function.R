@@ -1,10 +1,10 @@
-test_that('mm will return 0 when first.letter and second.letter do not match', {
-    expect_that(mm('a','b'), equals(0))
+test_that('mm will return 1 when first.letter and second.letter do not match', {
+    expect_that(mm('a','b'), equals(1))
 })
 
 
-test_that('mm will return 1 when first.letter and second.letter match', {
-    expect_that(mm('a','a'), equals(1))
+test_that('mm will return 0 when first.letter and second.letter match', {
+    expect_that(mm('a','a'), equals(0))
 })
 
 test_that('mm throw error if first.letter is string longer than one', {
