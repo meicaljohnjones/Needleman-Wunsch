@@ -59,5 +59,37 @@ test_that('calculate value returns mistmatch value when is smallest', {
 })
 
 test_that('calculate.value.top returns value at coordinate [i,j-1]', {
+    value.matrix <- matrix(data=c(1,2,3,4,5,6,7,8,9), nrow=3, ncol=3, byrow=T)
+    i <- 3
+    j <- 3
+    expected.output <- value.matrix[j-1, i]
 
+    expect_that(calculate.value.top(value.matrix, i, j), equals(expected.output))
+})
+
+test_that('calculate.value.left returns value at coordinate [i-1,j]', {
+    value.matrix <- matrix(data=c(1,2,3,4,5,6,7,8,9), nrow=3, ncol=3, byrow=T)
+    i <- 3
+    j <- 3
+    expected.output <- value.matrix[j, i-1]
+
+    expect_that(calculate.value.left(value.matrix, i, j), equals(expected.output))
+})
+
+
+test_that('calculate.value.mismatch works', {
+    value.matrix <- matrix(data=c(1,2,3,4,5,6,7,8,9), nrow=3, ncol=3, byrow=T)
+    colnames(value.matrix) <- LETTERS[1:3]
+    rownames(value.matrix) <- LETTERS[1:3]
+
+    expect_that(calculate.value.mismatch(value.matrix,1,1), equals(0))
+    expect_that(calculate.value.mismatch(value.matrix,2,2), equals(0))
+    expect_that(calculate.value.mismatch(value.matrix,3,3), equals(0))
+
+    expect_that(calculate.value.mismatch(value.matrix,1,2), equals(1))
+    expect_that(calculate.value.mismatch(value.matrix,1,3), equals(1))
+    expect_that(calculate.value.mismatch(value.matrix,2,1), equals(1))
+    expect_that(calculate.value.mismatch(value.matrix,2,3), equals(1))
+    expect_that(calculate.value.mismatch(value.matrix,3,1), equals(1))
+    expect_that(calculate.value.mismatch(value.matrix,3,2), equals(1))
 })
