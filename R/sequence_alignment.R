@@ -20,6 +20,30 @@ init.first.col.and.row <- function(value.matrix) {
     value.matrix
 }
 
+calculate.value.top <- function(value.matrix, i, j) {
+
+}
+
+calculate.value.left <- function(value.matrix, i, j) {
+
+}
+
+calculate.value.mismatch <- function(value.matrix, i, j) {
+
+}
+
+calculate.value <- function(value.matrix, i, j) {
+    if (i < 2) stop('i must be greater than or equal to 2')
+    if (j < 2) stop('j must be greater than or equal to 2')
+
+    min(
+        calculate.value.top(value.matrix, i, j),
+        calculate.value.left(value.matrix, i, j),
+        calculate.value.mismatch(value.matrix, i, j)
+    )
+
+}
+
 # Outputs the common sequence between the two
 find.global.sequence <- function(first.sequence, second.sequence) {
 

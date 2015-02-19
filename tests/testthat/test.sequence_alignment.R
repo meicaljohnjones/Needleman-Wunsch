@@ -38,3 +38,26 @@ test_that('init.first.col.and.row fills matrix first row and column correctly', 
         expect_that(in.matrix[y,1], equals(y - 1))
     }
 })
+
+test_that('calculate.value throws exception when i or j are less than 2', {
+    value.matrix <- matrix()
+    expect_error(calculate.value(value.matrix, 1, 2),
+                 'i must be greater than or equal to 2')
+    expect_error(calculate.value(value.matrix, 2, 1),
+                 'j must be greater than or equal to 2')
+})
+
+test_that('calculate value returns mistmatch value when is smallest', {
+    value.matrix <- NULL
+
+    with_mock(
+        calculate.value.top = function(value.matrix, i, j) 20,
+        calculate.value.left = function(value.matrix, i, j) 10,
+        calculate.value.mismatch = function(value.matrix, i, j) 5,
+        expect_that(calculate.value(value.matrix, 2, 2), equals(5))
+    )
+})
+
+test_that('calculate.value.top returns value at coordinate [i,j-1]', {
+
+})
