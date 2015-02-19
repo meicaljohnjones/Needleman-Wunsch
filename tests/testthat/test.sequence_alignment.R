@@ -77,19 +77,25 @@ test_that('calculate.value.left returns value at coordinate [i-1,j]', {
 })
 
 
-test_that('calculate.value.mismatch works', {
+test_that('calculate.value.mismatch adds one to [i-1,j-1] when first.letter != second.letter', {
     value.matrix <- matrix(data=c(1,2,3,4,5,6,7,8,9), nrow=3, ncol=3, byrow=T)
     colnames(value.matrix) <- LETTERS[1:3]
     rownames(value.matrix) <- LETTERS[1:3]
 
-    expect_that(calculate.value.mismatch(value.matrix,1,1), equals(0))
-    expect_that(calculate.value.mismatch(value.matrix,2,2), equals(0))
-    expect_that(calculate.value.mismatch(value.matrix,3,3), equals(0))
+    with_mock(mm = function(first.letter, second.letter) 1, {
+        expect_that(calculate.value.mismatch(value.matrix,3,3), equals(5 + 1))
+        expect_that(calculate.value.mismatch(value.matrix,3,2), equals(2 + 1))
+    })
+})
 
-    expect_that(calculate.value.mismatch(value.matrix,1,2), equals(1))
-    expect_that(calculate.value.mismatch(value.matrix,1,3), equals(1))
-    expect_that(calculate.value.mismatch(value.matrix,2,1), equals(1))
-    expect_that(calculate.value.mismatch(value.matrix,2,3), equals(1))
-    expect_that(calculate.value.mismatch(value.matrix,3,1), equals(1))
-    expect_that(calculate.value.mismatch(value.matrix,3,2), equals(1))
+
+test_that('calculate.value.mismatch returns value of [i-1,j-1] when first.letter == second.letter', {
+    value.matrix <- matrix(data=c(1,2,3,4,5,6,7,8,9), nrow=3, ncol=3, byrow=T)
+    colnames(value.matrix) <- LETTERS[1:3]
+    rownames(value.matrix) <- LETTERS[1:3]
+
+    with_mock(mm = function(first.letter, second.letter) 0, {
+        expect_that(calculate.value.mismatch(value.matrix,3,3), equals(5))
+        expect_that(calculate.value.mismatch(value.matrix,3,2), equals(2))
+    })
 })

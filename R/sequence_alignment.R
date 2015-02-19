@@ -31,7 +31,9 @@ calculate.value.left <- function(value.matrix, i, j) {
 calculate.value.mismatch <- function(value.matrix, i, j) {
     first.letter <- colnames(value.matrix)[i]
     second.letter <- rownames(value.matrix)[j]
-    mm(first.letter, second.letter)
+    mismatch.factor <- mm(first.letter, second.letter)
+
+    value.matrix[j-1, i-1] + mismatch.factor
 }
 
 calculate.value <- function(value.matrix, i, j) {
