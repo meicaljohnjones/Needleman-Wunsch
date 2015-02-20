@@ -118,3 +118,28 @@ test_that('init.non.edge.values calls calculate.value on non edge values in matr
         expect_that(value.matrix[3,3], equals(1))
     })
 })
+
+test_that('calculate.value.matrix calls init.first.col.and.row', {
+    with_mock(
+              init.first.col.and.row = function(value.matrix) matrix(data="pass", nrow=5,ncol=5),
+              #stop init.non.edge.values from modifying value.matrix
+              init.non.edge.values = function(value.matrix) value.matrix,
+              {
+                  out.matrix <- calculate.value.matrix(c('a','a'), c('a','t'))
+                  expect_that(out.matrix[1,1], equals("pass"))
+              }
+    )
+})
+
+
+test_that('calculate.value.matrix calls init.first.col.and.row', {
+    with_mock(
+              init.first.col.and.row = function(value.matrix) value.matrix,
+              #stop init.non.edge.values from modifying value.matrix
+              init.non.edge.values = function(value.matrix) matrix(data="pass", nrow=5,ncol=5),
+              {
+                  out.matrix <- calculate.value.matrix(c('a','a'), c('a','t'))
+                  expect_that(out.matrix[1,1], equals("pass"))
+              }
+    )
+})
