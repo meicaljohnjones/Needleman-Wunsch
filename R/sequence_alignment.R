@@ -21,11 +21,11 @@ init.first.col.and.row <- function(value.matrix) {
 }
 
 calculate.value.top <- function(value.matrix, i, j) {
-    value.matrix[j-1, i]
+    value.matrix[j-1, i] + 1
 }
 
 calculate.value.left <- function(value.matrix, i, j) {
-    value.matrix[j, i-1]
+    value.matrix[j, i-1] + 1
 }
 
 calculate.value.mismatch <- function(value.matrix, i, j) {

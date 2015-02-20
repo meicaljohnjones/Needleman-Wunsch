@@ -58,20 +58,20 @@ test_that('calculate value returns mistmatch value when is smallest', {
     )
 })
 
-test_that('calculate.value.top returns value at coordinate [i,j-1]', {
+test_that('calculate.value.top returns value at coordinate [i,j-1] + 1', {
     value.matrix <- matrix(data=c(1,2,3,4,5,6,7,8,9), nrow=3, ncol=3, byrow=T)
     i <- 3
     j <- 3
-    expected.output <- value.matrix[j-1, i]
+    expected.output <- value.matrix[j-1, i] + 1
 
     expect_that(calculate.value.top(value.matrix, i, j), equals(expected.output))
 })
 
-test_that('calculate.value.left returns value at coordinate [i-1,j]', {
+test_that('calculate.value.left returns value at coordinate [i-1,j] + 1', {
     value.matrix <- matrix(data=c(1,2,3,4,5,6,7,8,9), nrow=3, ncol=3, byrow=T)
     i <- 3
     j <- 3
-    expected.output <- value.matrix[j, i-1]
+    expected.output <- value.matrix[j, i-1] + 1
 
     expect_that(calculate.value.left(value.matrix, i, j), equals(expected.output))
 })
