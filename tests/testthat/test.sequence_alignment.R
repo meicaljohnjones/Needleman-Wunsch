@@ -134,8 +134,8 @@ test_that('calculate.value.matrix calls init.first.col.and.row', {
 
 test_that('calculate.value.matrix calls init.first.col.and.row', {
     with_mock(
+              #stop init.first.col.and.row from modifying value.matrix
               init.first.col.and.row = function(value.matrix) value.matrix,
-              #stop init.non.edge.values from modifying value.matrix
               init.non.edge.values = function(value.matrix) matrix(data="pass", nrow=5,ncol=5),
               {
                   out.matrix <- calculate.value.matrix(c('a','a'), c('a','t'))
