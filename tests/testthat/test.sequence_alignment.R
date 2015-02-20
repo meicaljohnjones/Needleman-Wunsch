@@ -99,3 +99,22 @@ test_that('calculate.value.mismatch returns value of [i-1,j-1] when first.letter
         expect_that(calculate.value.mismatch(value.matrix,3,2), equals(2))
     })
 })
+
+test_that('init.non.edge.values calls calculate.value on non edge values in matrix', {
+    value.matrix <- matrix(data=-1, nrow=3, ncol=3, byrow=T)
+
+    with_mock(calculate.value = function(value.matrix, i, j) { 1 }, {
+        value.matrix <- init.non.edge.values(value.matrix)
+
+        expect_that(value.matrix[1,1], equals(-1))
+        expect_that(value.matrix[1,2], equals(-1))
+        expect_that(value.matrix[1,3], equals(-1))
+        expect_that(value.matrix[2,1], equals(-1))
+        expect_that(value.matrix[3,1], equals(-1))
+
+        expect_that(value.matrix[2,2], equals(1))
+        expect_that(value.matrix[2,3], equals(1))
+        expect_that(value.matrix[3,2], equals(1))
+        expect_that(value.matrix[3,3], equals(1))
+    })
+})

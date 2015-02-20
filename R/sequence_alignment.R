@@ -3,6 +3,9 @@ calculate.value.matrix <- function(first.sequence, second.sequence) {
    colnames(value.matrix) <- c('*', first.sequence)
    rownames(value.matrix) <- c('*', second.sequence)
 
+   value.matrix <- init.first.col.and.row(value.matrix)
+   value.matrix <- init.non.edge.values(value.matrix)
+
    value.matrix
 }
 
@@ -46,6 +49,15 @@ calculate.value <- function(value.matrix, i, j) {
         calculate.value.mismatch(value.matrix, i, j)
     )
 
+}
+
+init.non.edge.values <- function(value.matrix) {
+    for (i in 2:ncol(value.matrix)) {
+        for (j in 2:nrow(value.matrix)) {
+            value.matrix[j,i] <- calculate.value(value.matrix, i, j)
+        }
+    }
+    value.matrix
 }
 
 # Outputs the common sequence between the two
