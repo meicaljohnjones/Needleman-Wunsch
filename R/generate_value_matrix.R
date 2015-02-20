@@ -59,8 +59,3 @@ init.non.edge.values <- function(value.matrix) {
     }
     value.matrix
 }
-
-# Outputs the common sequence between the two
-find.global.sequence <- function(first.sequence, second.sequence) {
-
-}
