@@ -1,23 +1,34 @@
-test_that('calculate.value.matrix generates matrix with length(first.sequence) + 1 columns and length(second.sequence) + 1 rows', {
+test_that('calculate.matrices generates value matrix with length(first.sequence) + 1 columns and length(second.sequence) + 1 rows and traceback matrix of same size both in a list', {
     first.sequence <- c('a','a')
     second.sequence <- c('b','b')
 
-    output.matrix <- calculate.value.matrix(first.sequence, second.sequence)
+    output.matrices <- calculate.matrices(first.sequence, second.sequence)
 
-    expect_that(ncol(output.matrix), equals(length(first.sequence) + 1))
-    expect_that(nrow(output.matrix), equals(length(second.sequence) + 1))
+    value.matrix <- output.matrices$value.matrix
+    expect_that(value.matrix, not(is_null()))
+
+    traceback.matrix <- output.matrices$traceback.matrix
+    expect_that(traceback.matrix, not(is_null()))
+
+    expect_that(ncol(value.matrix), equals(length(first.sequence) + 1))
+    expect_that(nrow(value.matrix), equals(length(second.sequence) + 1))
+
+    expect_that(ncol(traceback.matrix), equals(length(first.sequence) + 1))
+    expect_that(nrow(traceback.matrix), equals(length(second.sequence) + 1))
 })
 
-test_that('calculate.value.matrix labels col names using first.sequence and row names using second sequence, however, prepending an asterisk element row and column', {
+test_that('calculate.matrices labels col names using first.sequence and row names using second sequence on value.matrix, however, prepending an asterisk element row and column', {
     first.sequence <- c('a','a')
     second.sequence <- c('b','b')
 
     expected.cols <- c('*', first.sequence)
     expected.rows <- c('*', second.sequence)
 
-    output.matrix <- calculate.value.matrix(first.sequence, second.sequence)
-    expect_that(expected.cols, equals(colnames(output.matrix)))
-    expect_that(expected.rows, equals(rownames(output.matrix)))
+    output.matrices <- calculate.matrices(first.sequence, second.sequence)
+    value.matrix <- output.matrices$value.matrix
+
+    expect_that(expected.cols, equals(colnames(value.matrix)))
+    expect_that(expected.rows, equals(rownames(value.matrix)))
 })
 
 test_that('init.first.col.and.row fills matrix first row and column correctly', {
@@ -119,27 +130,27 @@ test_that('init.non.edge.values calls calculate.value on non edge values in matr
     })
 })
 
-test_that('calculate.value.matrix calls init.first.col.and.row', {
+test_that('calculate.matrices calls init.first.col.and.row on value.matrix', {
     with_mock(
               init.first.col.and.row = function(value.matrix) matrix(data="pass", nrow=5,ncol=5),
               #stop init.non.edge.values from modifying value.matrix
               init.non.edge.values = function(value.matrix) value.matrix,
               {
-                  out.matrix <- calculate.value.matrix(c('a','a'), c('a','t'))
-                  expect_that(out.matrix[1,1], equals("pass"))
+                  out.matrices <- calculate.matrices(c('a','a'), c('a','t'))
+                  expect_that(out.matrices$value.matrix[1,1], equals("pass"))
               }
     )
 })
 
 
-test_that('calculate.value.matrix calls init.first.col.and.row', {
+test_that('calculate.matrices calls init.non.edge.values on value.matrix', {
     with_mock(
               #stop init.first.col.and.row from modifying value.matrix
               init.first.col.and.row = function(value.matrix) value.matrix,
               init.non.edge.values = function(value.matrix) matrix(data="pass", nrow=5,ncol=5),
               {
-                  out.matrix <- calculate.value.matrix(c('a','a'), c('a','t'))
-                  expect_that(out.matrix[1,1], equals("pass"))
+                  out.matrices <- calculate.matrices(c('a','a'), c('a','t'))
+                  expect_that(out.matrices$value.matrix[1,1], equals("pass"))
               }
     )
 })

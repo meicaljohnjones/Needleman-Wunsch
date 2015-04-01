@@ -1,12 +1,17 @@
-calculate.value.matrix <- function(first.sequence, second.sequence) {
+calculate.matrices <- function(first.sequence, second.sequence) {
    value.matrix <- matrix(ncol=length(first.sequence) + 1, nrow=length(second.sequence) + 1)
    colnames(value.matrix) <- c('*', first.sequence)
    rownames(value.matrix) <- c('*', second.sequence)
 
-   value.matrix <- init.first.col.and.row(value.matrix)
-   value.matrix <- init.non.edge.values(value.matrix)
+   traceback.matrix <- matrix(ncol=length(first.sequence) + 1, nrow=length(second.sequence) + 1)
 
-   value.matrix
+   matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
+   #TODO calculate traceback matrix by passing in list to all functions
+
+   matrices$value.matrix <- init.first.col.and.row(matrices$value.matrix)
+   matrices$value.matrix <- init.non.edge.values(matrices$value.matrix)
+
+   matrices
 }
 
 init.first.col.and.row <- function(value.matrix) {
