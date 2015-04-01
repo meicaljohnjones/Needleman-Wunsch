@@ -50,6 +50,20 @@ test_that('init.first.col.and.row fills matrix first row and column correctly', 
     }
 })
 
+test_that('calculate.values should return vector(value.top, value.left, value.mismatch)', {
+  my.matrix <- matrix()
+
+  with_mock(
+    calculate.value.top = function(value.matrix, i, j) { 20 },
+    calculate.value.left = function(value.matrix, i, j) { 10 },
+    calculate.value.mismatch = function(value.matrix, i, j) { 5 },
+    {
+      values <- calculate.values(my.matrix, 2, 2)
+      expect_that(values, equals(c(value.top=20,value.left=10,value.mismatch=5)))
+    }
+  )
+})
+
 test_that('calculate.value throws exception when i or j are less than 2', {
     value.matrix <- matrix()
     expect_error(calculate.value(value.matrix, 1, 2),
