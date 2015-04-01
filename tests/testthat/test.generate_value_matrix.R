@@ -114,6 +114,27 @@ test_that('calculate.value.mismatch returns value of [i-1,j-1] when first.letter
     })
 })
 
+test_that('calculate.traceback.direction returns "up" string when value.top is smallest in top.left.and.mismatch.values vector', {
+    top.left.and.mismatch.values <- c(value.top=3,value.left=4,value.mismatch=5)
+    result <- calculate.traceback.direction(top.left.and.mismatch.values)
+
+    expect_that(result, equals('up'))
+})
+
+test_that('calculate.traceback.direction returns "left" when value.left is smallest in top.left.and.mismatch.values vector', {
+  top.left.and.mismatch.values <- c(value.top=5,value.left=3,value.mismatch=4)
+  result <- calculate.traceback.direction(top.left.and.mismatch.values)
+
+  expect_that(result, equals('left'))
+})
+
+test_that('calculate.traceback.direction returns "diag" when value.mismatch is smallest in top.left.and.mismatch.values vector', {
+  top.left.and.mismatch.values <- c(value.top=5,value.left=4,value.mismatch=3)
+  result <- calculate.traceback.direction(top.left.and.mismatch.values)
+
+  expect_that(result, equals('diag'))
+})
+
 test_that('init.non.edge.values calls calculate.value on non edge values in matrix', {
     value.matrix <- matrix(data=-1, nrow=3, ncol=3, byrow=T)
 

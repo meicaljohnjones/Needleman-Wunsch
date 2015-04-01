@@ -55,6 +55,20 @@ calculate.values <- function(value.matrix, i, j) {
   )
 }
 
+calculate.traceback.direction <- function(top.left.and.mismatch.values) {
+  min.val <- min(top.left.and.mismatch.values)
+
+  min.label <- names(top.left.and.mismatch.values[top.left.and.mismatch.values == min.val])[1]
+  # now convert the label to either 'up', 'left' or 'diag'
+  if (min.label == 'value.top') {
+    'up'
+  } else if (min.label == 'value.left') {
+    'left'
+  } else {
+    'diag'
+  }
+}
+
 init.non.edge.values <- function(value.matrix) {
     for (i in 2:ncol(value.matrix)) {
         for (j in 2:nrow(value.matrix)) {
