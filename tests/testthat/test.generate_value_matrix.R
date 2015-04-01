@@ -72,17 +72,6 @@ test_that('calculate.values throws exception when i or j are less than 2', {
                  'j must be greater than or equal to 2')
 })
 
-test_that('calculate value returns mistmatch value when is smallest', {
-    value.matrix <- NULL
-
-    with_mock(
-        calculate.value.top = function(value.matrix, i, j) 20,
-        calculate.value.left = function(value.matrix, i, j) 10,
-        calculate.value.mismatch = function(value.matrix, i, j) 5,
-        expect_that(calculate.value(value.matrix, 2, 2), equals(5))
-    )
-})
-
 test_that('calculate.value.top returns value at coordinate [i,j-1] + 1', {
     value.matrix <- matrix(data=c(1,2,3,4,5,6,7,8,9), nrow=3, ncol=3, byrow=T)
     i <- 3
@@ -128,7 +117,7 @@ test_that('calculate.value.mismatch returns value of [i-1,j-1] when first.letter
 test_that('init.non.edge.values calls calculate.value on non edge values in matrix', {
     value.matrix <- matrix(data=-1, nrow=3, ncol=3, byrow=T)
 
-    with_mock(calculate.value = function(value.matrix, i, j) { 1 }, {
+    with_mock(calculate.values = function(value.matrix, i, j) { c(4, 1, 5) }, {
         value.matrix <- init.non.edge.values(value.matrix)
 
         expect_that(value.matrix[1,1], equals(-1))
@@ -137,6 +126,7 @@ test_that('init.non.edge.values calls calculate.value on non edge values in matr
         expect_that(value.matrix[2,1], equals(-1))
         expect_that(value.matrix[3,1], equals(-1))
 
+        # expect that we're returning the smallest value
         expect_that(value.matrix[2,2], equals(1))
         expect_that(value.matrix[2,3], equals(1))
         expect_that(value.matrix[3,2], equals(1))

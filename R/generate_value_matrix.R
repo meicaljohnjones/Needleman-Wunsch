@@ -55,17 +55,11 @@ calculate.values <- function(value.matrix, i, j) {
   )
 }
 
-calculate.value <- function(value.matrix, i, j) {
-    if (i < 2) stop('i must be greater than or equal to 2')
-    if (j < 2) stop('j must be greater than or equal to 2')
-
-    min(calculate.values(value.matrix, i, j))
-}
-
 init.non.edge.values <- function(value.matrix) {
     for (i in 2:ncol(value.matrix)) {
         for (j in 2:nrow(value.matrix)) {
-            value.matrix[j,i] <- calculate.value(value.matrix, i, j)
+            values <- calculate.values(value.matrix, i, j)
+            value.matrix[j,i] <- min(values)
         }
     }
     value.matrix
