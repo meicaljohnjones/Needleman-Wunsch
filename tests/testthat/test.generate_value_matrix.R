@@ -64,11 +64,11 @@ test_that('calculate.values should return vector(value.top, value.left, value.mi
   )
 })
 
-test_that('calculate.value throws exception when i or j are less than 2', {
+test_that('calculate.values throws exception when i or j are less than 2', {
     value.matrix <- matrix()
-    expect_error(calculate.value(value.matrix, 1, 2),
+    expect_error(calculate.values(value.matrix, 1, 2),
                  'i must be greater than or equal to 2')
-    expect_error(calculate.value(value.matrix, 2, 1),
+    expect_error(calculate.values(value.matrix, 2, 1),
                  'j must be greater than or equal to 2')
 })
 

@@ -45,6 +45,9 @@ calculate.value.mismatch <- function(value.matrix, i, j) {
 }
 
 calculate.values <- function(value.matrix, i, j) {
+  if (i < 2) stop('i must be greater than or equal to 2')
+  if (j < 2) stop('j must be greater than or equal to 2')
+
   c(
     value.top=calculate.value.top(value.matrix, i, j),
     value.left=calculate.value.left(value.matrix, i, j),
@@ -56,12 +59,7 @@ calculate.value <- function(value.matrix, i, j) {
     if (i < 2) stop('i must be greater than or equal to 2')
     if (j < 2) stop('j must be greater than or equal to 2')
 
-    min(
-        calculate.value.top(value.matrix, i, j),
-        calculate.value.left(value.matrix, i, j),
-        calculate.value.mismatch(value.matrix, i, j)
-    )
-
+    min(calculate.values(value.matrix, i, j))
 }
 
 init.non.edge.values <- function(value.matrix) {
