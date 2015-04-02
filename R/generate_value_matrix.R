@@ -88,14 +88,18 @@ calculate.traceback.direction <- function(top.left.and.mismatch.values) {
 
 init.non.edge.values <- function(matrices) {
     value.matrix <- matrices$value.matrix
+    traceback.matrix <- matrices$traceback.matrix
 
     for (i in 2:ncol(value.matrix)) {
         for (j in 2:nrow(value.matrix)) {
             values <- calculate.values(value.matrix, i, j)
             value.matrix[j,i] <- min(values)
+            traceback.matrix[j,i] <- calculate.traceback.direction(values)
         }
     }
 
     matrices$value.matrix <- value.matrix
+    matrices$traceback.matrix <- traceback.matrix
+
     matrices
 }

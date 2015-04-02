@@ -183,7 +183,8 @@ test_that('init.non.edge.values calls calculate.value on non edge values in valu
     traceback.matrix <- matrix(data=-1, nrow=3, ncol=3, byrow=T) # not used in this test
     matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
 
-    with_mock(calculate.values = function(value.matrix, i, j) { c(4, 1, 5) }, {
+    with_mock(calculate.values = function(value.matrix, i, j) { c(4, 1, 5) },
+              calculate.traceback.direction = function(top.left.and.mismatch.values) { "test_passed" }, {
         out.matrices <- init.non.edge.values(matrices)
         expect_that(out.matrices, not(is_null()))
         out.value.matrix <- out.matrices$value.matrix
@@ -200,6 +201,26 @@ test_that('init.non.edge.values calls calculate.value on non edge values in valu
         expect_that(out.value.matrix[3,2], equals(1))
         expect_that(out.value.matrix[3,3], equals(1))
     })
+})
+
+test_that('init.non.edge.values calls calculate.traceback.direction on non edge values in traceback.matrix', {
+  value.matrix <- matrix(data=-1, nrow=3, ncol=3, byrow=T) # not used in this test
+  traceback.matrix <- matrix(data="", nrow=3, ncol=3, byrow=T)
+  matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
+
+  # will fill all non-edge with 'test_passed'
+  with_mock(calculate.traceback.direction = function(top.left.and.mismatch.values) { "test_passed" },
+            calculate.values = function(value.matrix, i, j) { c(value.top=4, value.left=1, value.mismatch=5) }, {
+        out.matrices <- init.non.edge.values(matrices)
+        expect_that(out.matrices, not(is_null()))
+        out.traceback.matrix <- out.matrices$traceback.matrix
+
+        expect_that(out.traceback.matrix[2,2], equals("test_passed"))
+        expect_that(out.traceback.matrix[2,3], equals("test_passed"))
+        expect_that(out.traceback.matrix[3,2], equals("test_passed"))
+        expect_that(out.traceback.matrix[3,3], equals("test_passed"))
+  })
+
 })
 
 test_that('calculate.matrices calls init.first.col.and.row', {
