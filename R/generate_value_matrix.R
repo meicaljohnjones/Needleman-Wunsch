@@ -27,6 +27,19 @@ init.first.col.and.row <- function(matrices) {
     }
 
     matrices$value.matrix <- value.matrix
+
+    traceback.matrix <- matrices$traceback.matrix
+    traceback.matrix[1,1] <- 'done'
+
+    for (i in 2:ncol(traceback.matrix)) {
+      traceback.matrix[1,i] <- 'left'
+    }
+
+    for (j in 2:nrow(traceback.matrix)) {
+      traceback.matrix[j,1] <- 'up'
+    }
+
+    matrices$traceback.matrix <- traceback.matrix
     matrices
 }
 

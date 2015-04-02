@@ -36,7 +36,7 @@ test_that('init.first.col.and.row fills value matrix first row and column correc
     nrow <- 5
     ncol <- 6
     value.matrix <- matrix(data = NA, nrow=nrow, ncol=ncol)
-    traceback.matrix <- matrix # empty as we're not testing this
+    traceback.matrix <- matrix(data = NA, nrow=nrow, ncol=ncol) # empty as we're not testing this
     matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
 
     out.matrices <- init.first.col.and.row(matrices)
@@ -48,7 +48,7 @@ test_that('init.first.col.and.row fills value matrix first row and column correc
 
 
     # test col values correct
-    for (x in 1:nrow) {
+    for (x in 1:ncol) { # 2 because first value is 'done'
         expect_that(out.value.matrix[1,x], equals(x - 1))
     }
 
@@ -56,6 +56,37 @@ test_that('init.first.col.and.row fills value matrix first row and column correc
     for (y in 1:nrow) {
         expect_that(out.value.matrix[y,1], equals(y - 1))
     }
+})
+
+test_that('init.first.col.and.row fills traceback matrix first row and column correctly', {
+  # given
+  nrow <- 5
+  ncol <- 6
+  traceback.matrix <- matrix(data = NA, nrow=nrow, ncol=ncol)
+  value.matrix <- matrix(data = NA, nrow=nrow, ncol=ncol) # empty as we're not testing this
+  matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
+
+  # when
+  out.matrices <- init.first.col.and.row(matrices)
+
+  # then
+  expect_that(typeof(out.matrices), equals("list"))
+  out.matrices
+
+  out.traceback.matrix <- out.matrices$traceback.matrix
+  expect_that(out.traceback.matrix, not(is_null()))
+
+  expect_that(out.traceback.matrix[1,1], equals("done"))
+
+  # test col values correct
+  for (x in 2:ncol) {
+    expect_that(out.traceback.matrix[1,x], equals("left"))
+  }
+
+  # test row values correct
+  for (y in 2:nrow) {
+    expect_that(out.traceback.matrix[y,1], equals("up"))
+  }
 })
 
 test_that('calculate.values should return vector(value.top, value.left, value.mismatch)', {
