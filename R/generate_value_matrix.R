@@ -4,6 +4,8 @@ calculate.matrices <- function(first.sequence, second.sequence) {
    rownames(value.matrix) <- c('*', second.sequence)
 
    traceback.matrix <- matrix(ncol=length(first.sequence) + 1, nrow=length(second.sequence) + 1)
+   colnames(traceback.matrix) <- c('*', first.sequence)
+   rownames(traceback.matrix) <- c('*', second.sequence)
 
    matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
    #TODO calculate traceback matrix by passing in list to all functions

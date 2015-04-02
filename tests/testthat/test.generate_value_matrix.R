@@ -17,7 +17,7 @@ test_that('calculate.matrices generates value matrix with length(first.sequence)
     expect_that(nrow(traceback.matrix), equals(length(second.sequence) + 1))
 })
 
-test_that('calculate.matrices labels col names using first.sequence and row names using second sequence on value.matrix, however, prepending an asterisk element row and column', {
+test_that('calculate.matrices labels col names using first.sequence and row names using second sequence on value.matrix and traceback.matrix, however, prepending an asterisk element row and column', {
     first.sequence <- c('a','a')
     second.sequence <- c('b','b')
 
@@ -26,9 +26,13 @@ test_that('calculate.matrices labels col names using first.sequence and row name
 
     output.matrices <- calculate.matrices(first.sequence, second.sequence)
     value.matrix <- output.matrices$value.matrix
+    traceback.matrix <- output.matrices$traceback.matrix
 
     expect_that(expected.cols, equals(colnames(value.matrix)))
     expect_that(expected.rows, equals(rownames(value.matrix)))
+
+    expect_that(expected.cols, equals(colnames(traceback.matrix)))
+    expect_that(expected.rows, equals(rownames(traceback.matrix)))
 })
 
 test_that('init.first.col.and.row fills value matrix first row and column correctly', {
