@@ -8,13 +8,14 @@ calculate.matrices <- function(first.sequence, second.sequence) {
    matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
    #TODO calculate traceback matrix by passing in list to all functions
 
-   matrices$value.matrix <- init.first.col.and.row(matrices$value.matrix)
+   matrices <- init.first.col.and.row(matrices)
    matrices$value.matrix <- init.non.edge.values(matrices$value.matrix)
 
    matrices
 }
 
-init.first.col.and.row <- function(value.matrix) {
+init.first.col.and.row <- function(matrices) {
+    value.matrix <- matrices$value.matrix
     value.matrix[1,1] <- 0
 
     for (i in 2:ncol(value.matrix)) {
@@ -25,7 +26,8 @@ init.first.col.and.row <- function(value.matrix) {
         value.matrix[j,1] <- j - 1
     }
 
-    value.matrix
+    matrices$value.matrix <- value.matrix
+    matrices
 }
 
 calculate.value.top <- function(value.matrix, i, j) {

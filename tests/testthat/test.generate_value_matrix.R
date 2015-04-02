@@ -31,22 +31,30 @@ test_that('calculate.matrices labels col names using first.sequence and row name
     expect_that(expected.rows, equals(rownames(value.matrix)))
 })
 
-test_that('init.first.col.and.row fills matrix first row and column correctly', {
+test_that('init.first.col.and.row fills value matrix first row and column correctly', {
     # given
     nrow <- 5
     ncol <- 6
-    in.matrix <- matrix(data = NA, nrow=nrow, ncol=ncol)
+    value.matrix <- matrix(data = NA, nrow=nrow, ncol=ncol)
+    traceback.matrix <- matrix # empty as we're not testing this
+    matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
 
-    in.matrix <- init.first.col.and.row(in.matrix)
+    out.matrices <- init.first.col.and.row(matrices)
+    expect_that(typeof(out.matrices), equals("list"))
+    out.matrices
+
+    out.value.matrix <- out.matrices$value.matrix
+    expect_that(out.value.matrix, not(is_null()))
+
 
     # test col values correct
     for (x in 1:nrow) {
-        expect_that(in.matrix[1,x], equals(x - 1))
+        expect_that(out.value.matrix[1,x], equals(x - 1))
     }
 
     # test row values correct
     for (y in 1:nrow) {
-        expect_that(in.matrix[y,1], equals(y - 1))
+        expect_that(out.value.matrix[y,1], equals(y - 1))
     }
 })
 
@@ -157,7 +165,9 @@ test_that('init.non.edge.values calls calculate.value on non edge values in matr
 
 test_that('calculate.matrices calls init.first.col.and.row on value.matrix', {
     with_mock(
-              init.first.col.and.row = function(value.matrix) matrix(data="pass", nrow=5,ncol=5),
+              init.first.col.and.row = function(matrices) {
+                list(value.matrix=matrix(data="pass", nrow=5,ncol=5), traceback.matrix=matrix())
+              },
               #stop init.non.edge.values from modifying value.matrix
               init.non.edge.values = function(value.matrix) value.matrix,
               {
