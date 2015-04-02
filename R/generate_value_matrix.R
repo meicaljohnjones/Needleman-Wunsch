@@ -11,7 +11,7 @@ calculate.matrices <- function(first.sequence, second.sequence) {
    #TODO calculate traceback matrix by passing in list to all functions
 
    matrices <- init.first.col.and.row(matrices)
-   matrices$value.matrix <- init.non.edge.values(matrices$value.matrix)
+   matrices <- init.non.edge.values(matrices)
 
    matrices
 }
@@ -86,12 +86,16 @@ calculate.traceback.direction <- function(top.left.and.mismatch.values) {
   }
 }
 
-init.non.edge.values <- function(value.matrix) {
+init.non.edge.values <- function(matrices) {
+    value.matrix <- matrices$value.matrix
+
     for (i in 2:ncol(value.matrix)) {
         for (j in 2:nrow(value.matrix)) {
             values <- calculate.values(value.matrix, i, j)
             value.matrix[j,i] <- min(values)
         }
     }
-    value.matrix
+
+    matrices$value.matrix <- value.matrix
+    matrices
 }

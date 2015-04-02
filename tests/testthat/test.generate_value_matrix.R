@@ -178,27 +178,31 @@ test_that('calculate.traceback.direction returns "diag" when value.mismatch is s
   expect_that(result, equals('diag'))
 })
 
-test_that('init.non.edge.values calls calculate.value on non edge values in matrix', {
+test_that('init.non.edge.values calls calculate.value on non edge values in value.matrix', {
     value.matrix <- matrix(data=-1, nrow=3, ncol=3, byrow=T)
+    traceback.matrix <- matrix(data=-1, nrow=3, ncol=3, byrow=T) # not used in this test
+    matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
 
     with_mock(calculate.values = function(value.matrix, i, j) { c(4, 1, 5) }, {
-        value.matrix <- init.non.edge.values(value.matrix)
+        out.matrices <- init.non.edge.values(matrices)
+        expect_that(out.matrices, not(is_null()))
+        out.value.matrix <- out.matrices$value.matrix
 
-        expect_that(value.matrix[1,1], equals(-1))
-        expect_that(value.matrix[1,2], equals(-1))
-        expect_that(value.matrix[1,3], equals(-1))
-        expect_that(value.matrix[2,1], equals(-1))
-        expect_that(value.matrix[3,1], equals(-1))
+        expect_that(out.value.matrix[1,1], equals(-1))
+        expect_that(out.value.matrix[1,2], equals(-1))
+        expect_that(out.value.matrix[1,3], equals(-1))
+        expect_that(out.value.matrix[2,1], equals(-1))
+        expect_that(out.value.matrix[3,1], equals(-1))
 
         # expect that we're returning the smallest value
-        expect_that(value.matrix[2,2], equals(1))
-        expect_that(value.matrix[2,3], equals(1))
-        expect_that(value.matrix[3,2], equals(1))
-        expect_that(value.matrix[3,3], equals(1))
+        expect_that(out.value.matrix[2,2], equals(1))
+        expect_that(out.value.matrix[2,3], equals(1))
+        expect_that(out.value.matrix[3,2], equals(1))
+        expect_that(out.value.matrix[3,3], equals(1))
     })
 })
 
-test_that('calculate.matrices calls init.first.col.and.row on value.matrix', {
+test_that('calculate.matrices calls init.first.col.and.row', {
     with_mock(
               init.first.col.and.row = function(matrices) {
                 list(value.matrix=matrix(data="pass", nrow=5,ncol=5), traceback.matrix=matrix())
@@ -213,11 +217,11 @@ test_that('calculate.matrices calls init.first.col.and.row on value.matrix', {
 })
 
 
-test_that('calculate.matrices calls init.non.edge.values on value.matrix', {
+test_that('calculate.matrices calls init.non.edge.values', {
     with_mock(
               #stop init.first.col.and.row from modifying value.matrix
-              init.first.col.and.row = function(value.matrix) value.matrix,
-              init.non.edge.values = function(value.matrix) matrix(data="pass", nrow=5,ncol=5),
+              init.first.col.and.row = function(matrices) matrices,
+              init.non.edge.values = function(matrices) list(value.matrix=matrix(data="pass", nrow=5,ncol=5), traceback.matrix=matrix()),
               {
                   out.matrices <- calculate.matrices(c('a','a'), c('a','t'))
                   expect_that(out.matrices$value.matrix[1,1], equals("pass"))
