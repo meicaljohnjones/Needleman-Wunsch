@@ -68,3 +68,17 @@ test_that('calculate.alignment builds perfect alignment', {
   expect_that(result$alignment2, equals(c("A","_", "N", "D")))
 
 })
+
+test_that('calculate.maxscore yields the bottom-right value of the value.matrix from matrices', {
+  # given
+  value.matrix <- matrix(data=1:9, nrow=3, ncol=3)
+  traceback.matrix <- matrix() # not needed
+  matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
+
+  # when
+  result <- calculate.maxscore(matrices)
+
+  # then
+  expect_that(is.integer(result), equals(TRUE))
+  expect_that(result, equals(9)) # bottom right value
+})

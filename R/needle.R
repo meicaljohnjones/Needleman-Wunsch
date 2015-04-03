@@ -45,3 +45,12 @@ calculate.alignment.step <- function(seq1.letter, seq2.letter, traceback.directi
     stop(paste("Invalid traceback.direction (",traceback.direction,") given. Please use 'up', 'left' or 'diag'", sep=""))
   }
 }
+
+calculate.maxscore <- function(matrices) {
+  value.matrix <- matrices$value.matrix
+
+  i <- ncol(value.matrix)
+  j <- nrow(value.matrix)
+
+  value.matrix[j, i]
+}
