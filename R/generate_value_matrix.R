@@ -70,13 +70,13 @@ calculate.values <- function(value.matrix, i, j, mismatch.function, gap) {
 }
 
 calculate.traceback.direction <- function(top.left.and.mismatch.values) {
-  min.val <- min(top.left.and.mismatch.values)
+  max.val <- max(top.left.and.mismatch.values)
 
-  min.label <- names(top.left.and.mismatch.values[top.left.and.mismatch.values == min.val])[1]
+  max.label <- names(top.left.and.mismatch.values[top.left.and.mismatch.values == max.val])[1]
   # now convert the label to either 'up', 'left' or 'diag'
-  if (min.label == 'value.top') {
+  if (max.label == 'value.top') {
     'up'
-  } else if (min.label == 'value.left') {
+  } else if (max.label == 'value.left') {
     'left'
   } else {
     'diag'
@@ -90,7 +90,7 @@ init.non.edge.values <- function(matrices, mismatch.function, gap) {
     for (i in 2:ncol(value.matrix)) {
         for (j in 2:nrow(value.matrix)) {
             values <- calculate.values(value.matrix, i, j, mismatch.function, gap)
-            value.matrix[j,i] <- min(values)
+            value.matrix[j,i] <- max(values)
             traceback.matrix[j,i] <- calculate.traceback.direction(values)
         }
     }

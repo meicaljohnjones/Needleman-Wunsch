@@ -196,22 +196,22 @@ test_that('calculate.value.mismatch returns value of [i-1,j-1] when first.letter
     expect_that(calculate.value.mismatch(value.matrix,3,2, mm), equals(2))
 })
 
-test_that('calculate.traceback.direction returns "up" string when value.top is smallest in top.left.and.mismatch.values vector', {
-    top.left.and.mismatch.values <- c(value.top=3,value.left=4,value.mismatch=5)
+test_that('calculate.traceback.direction returns "up" string when value.top is largest in top.left.and.mismatch.values vector', {
+    top.left.and.mismatch.values <- c(value.top=6,value.left=4,value.mismatch=5)
     result <- calculate.traceback.direction(top.left.and.mismatch.values)
 
     expect_that(result, equals('up'))
 })
 
-test_that('calculate.traceback.direction returns "left" when value.left is smallest in top.left.and.mismatch.values vector', {
-  top.left.and.mismatch.values <- c(value.top=5,value.left=3,value.mismatch=4)
+test_that('calculate.traceback.direction returns "left" when value.left is largest in top.left.and.mismatch.values vector', {
+  top.left.and.mismatch.values <- c(value.top=5,value.left=6,value.mismatch=4)
   result <- calculate.traceback.direction(top.left.and.mismatch.values)
 
   expect_that(result, equals('left'))
 })
 
-test_that('calculate.traceback.direction returns "diag" when value.mismatch is smallest in top.left.and.mismatch.values vector', {
-  top.left.and.mismatch.values <- c(value.top=5,value.left=4,value.mismatch=3)
+test_that('calculate.traceback.direction returns "diag" when value.mismatch is largest in top.left.and.mismatch.values vector', {
+  top.left.and.mismatch.values <- c(value.top=5,value.left=4,value.mismatch=6)
   result <- calculate.traceback.direction(top.left.and.mismatch.values)
 
   expect_that(result, equals('diag'))
@@ -236,11 +236,11 @@ test_that('init.non.edge.values calls calculate.value on non edge values in valu
         expect_that(out.value.matrix[2,1], equals(-1))
         expect_that(out.value.matrix[3,1], equals(-1))
 
-        # expect that we're returning the smallest value
-        expect_that(out.value.matrix[2,2], equals(1))
-        expect_that(out.value.matrix[2,3], equals(1))
-        expect_that(out.value.matrix[3,2], equals(1))
-        expect_that(out.value.matrix[3,3], equals(1))
+        # expect that we're returning the largest value
+        expect_that(out.value.matrix[2,2], equals(5))
+        expect_that(out.value.matrix[2,3], equals(5))
+        expect_that(out.value.matrix[3,2], equals(5))
+        expect_that(out.value.matrix[3,3], equals(5))
     })
 })
 
