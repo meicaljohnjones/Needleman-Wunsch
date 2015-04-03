@@ -1,8 +1,9 @@
 test_that('calculate.matrices generates value matrix with length(first.sequence) + 1 columns and length(second.sequence) + 1 rows and traceback matrix of same size both in a list', {
     first.sequence <- c('a','a')
     second.sequence <- c('b','b')
+    mismatch.function <- function(first.letter, second.letter) 0
 
-    output.matrices <- calculate.matrices(first.sequence, second.sequence)
+    output.matrices <- calculate.matrices(first.sequence, second.sequence, mismatch.function)
 
     value.matrix <- output.matrices$value.matrix
     expect_that(value.matrix, not(is_null()))
@@ -20,11 +21,12 @@ test_that('calculate.matrices generates value matrix with length(first.sequence)
 test_that('calculate.matrices labels col names using first.sequence and row names using second sequence on value.matrix and traceback.matrix, however, prepending an asterisk element row and column', {
     first.sequence <- c('a','a')
     second.sequence <- c('b','b')
+    mismatch.function <- function(first.letter, second.letter) 0
 
     expected.cols <- c('*', first.sequence)
     expected.rows <- c('*', second.sequence)
 
-    output.matrices <- calculate.matrices(first.sequence, second.sequence)
+    output.matrices <- calculate.matrices(first.sequence, second.sequence, mismatch.function)
     value.matrix <- output.matrices$value.matrix
     traceback.matrix <- output.matrices$traceback.matrix
 
@@ -95,13 +97,14 @@ test_that('init.first.col.and.row fills traceback matrix first row and column co
 
 test_that('calculate.values should return vector(value.top, value.left, value.mismatch)', {
   my.matrix <- matrix()
+  mm <- function(first.letter, second.letter) 0
 
   with_mock(
     calculate.value.top = function(value.matrix, i, j) { 20 },
     calculate.value.left = function(value.matrix, i, j) { 10 },
-    calculate.value.mismatch = function(value.matrix, i, j) { 5 },
+    calculate.value.mismatch = function(value.matrix, i, j, mismatch.function) { 5 },
     {
-      values <- calculate.values(my.matrix, 2, 2)
+      values <- calculate.values(my.matrix, 2, 2, mm)
       expect_that(values, equals(c(value.top=20,value.left=10,value.mismatch=5)))
     }
   )
@@ -109,9 +112,10 @@ test_that('calculate.values should return vector(value.top, value.left, value.mi
 
 test_that('calculate.values throws exception when i or j are less than 2', {
     value.matrix <- matrix()
-    expect_error(calculate.values(value.matrix, 1, 2),
+    mm <- function(first.letter, second.letter) 0
+    expect_error(calculate.values(value.matrix, 1, 2, mm),
                  'i must be greater than or equal to 2')
-    expect_error(calculate.values(value.matrix, 2, 1),
+    expect_error(calculate.values(value.matrix, 2, 1, mm),
                  'j must be greater than or equal to 2')
 })
 
@@ -135,26 +139,28 @@ test_that('calculate.value.left returns value at coordinate [i-1,j] + 1', {
 
 
 test_that('calculate.value.mismatch adds one to [i-1,j-1] when first.letter != second.letter', {
+    # given
     value.matrix <- matrix(data=c(1,2,3,4,5,6,7,8,9), nrow=3, ncol=3, byrow=T)
     colnames(value.matrix) <- LETTERS[1:3]
     rownames(value.matrix) <- LETTERS[1:3]
+    mm <- function(first.letter, second.letter) 1
 
-    with_mock(mm = function(first.letter, second.letter) 1, {
-        expect_that(calculate.value.mismatch(value.matrix,3,3), equals(5 + 1))
-        expect_that(calculate.value.mismatch(value.matrix,3,2), equals(2 + 1))
-    })
+    # then
+    expect_that(calculate.value.mismatch(value.matrix,3,3, mm), equals(5 + 1))
+    expect_that(calculate.value.mismatch(value.matrix,3,2, mm), equals(2 + 1))
 })
 
 
 test_that('calculate.value.mismatch returns value of [i-1,j-1] when first.letter == second.letter', {
+    # given
     value.matrix <- matrix(data=c(1,2,3,4,5,6,7,8,9), nrow=3, ncol=3, byrow=T)
     colnames(value.matrix) <- LETTERS[1:3]
     rownames(value.matrix) <- LETTERS[1:3]
+    mm <- function(first.letter, second.letter) 0
 
-    with_mock(mm = function(first.letter, second.letter) 0, {
-        expect_that(calculate.value.mismatch(value.matrix,3,3), equals(5))
-        expect_that(calculate.value.mismatch(value.matrix,3,2), equals(2))
-    })
+    # when
+    expect_that(calculate.value.mismatch(value.matrix,3,3, mm), equals(5))
+    expect_that(calculate.value.mismatch(value.matrix,3,2, mm), equals(2))
 })
 
 test_that('calculate.traceback.direction returns "up" string when value.top is smallest in top.left.and.mismatch.values vector', {
@@ -182,10 +188,11 @@ test_that('init.non.edge.values calls calculate.value on non edge values in valu
     value.matrix <- matrix(data=-1, nrow=3, ncol=3, byrow=T)
     traceback.matrix <- matrix(data=-1, nrow=3, ncol=3, byrow=T) # not used in this test
     matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
+    mismatch.function <- function() 0
 
-    with_mock(calculate.values = function(value.matrix, i, j) { c(4, 1, 5) },
+    with_mock(calculate.values = function(value.matrix, i, j, mismatch.function) { c(4, 1, 5) },
               calculate.traceback.direction = function(top.left.and.mismatch.values) { "test_passed" }, {
-        out.matrices <- init.non.edge.values(matrices)
+        out.matrices <- init.non.edge.values(matrices, mismatch.function)
         expect_that(out.matrices, not(is_null()))
         out.value.matrix <- out.matrices$value.matrix
 
@@ -207,11 +214,12 @@ test_that('init.non.edge.values calls calculate.traceback.direction on non edge 
   value.matrix <- matrix(data=-1, nrow=3, ncol=3, byrow=T) # not used in this test
   traceback.matrix <- matrix(data="", nrow=3, ncol=3, byrow=T)
   matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
+  mismatch.function <- function() 0
 
   # will fill all non-edge with 'test_passed'
   with_mock(calculate.traceback.direction = function(top.left.and.mismatch.values) { "test_passed" },
-            calculate.values = function(value.matrix, i, j) { c(value.top=4, value.left=1, value.mismatch=5) }, {
-        out.matrices <- init.non.edge.values(matrices)
+            calculate.values = function(value.matrix, i, j, mismatch.function) { c(value.top=4, value.left=1, value.mismatch=5) }, {
+        out.matrices <- init.non.edge.values(matrices, mismatch.function)
         expect_that(out.matrices, not(is_null()))
         out.traceback.matrix <- out.matrices$traceback.matrix
 
@@ -224,14 +232,15 @@ test_that('init.non.edge.values calls calculate.traceback.direction on non edge 
 })
 
 test_that('calculate.matrices calls init.first.col.and.row', {
+    mismatch.function <- function(first.letter, second.letter) 0
     with_mock(
               init.first.col.and.row = function(matrices) {
                 list(value.matrix=matrix(data="pass", nrow=5,ncol=5), traceback.matrix=matrix())
               },
               #stop init.non.edge.values from modifying value.matrix
-              init.non.edge.values = function(value.matrix) value.matrix,
+              init.non.edge.values = function(value.matrix, mismatch.function) value.matrix,
               {
-                  out.matrices <- calculate.matrices(c('a','a'), c('a','t'))
+                  out.matrices <- calculate.matrices(c('a','a'), c('a','t'), mismatch.function)
                   expect_that(out.matrices$value.matrix[1,1], equals("pass"))
               }
     )
@@ -239,12 +248,13 @@ test_that('calculate.matrices calls init.first.col.and.row', {
 
 
 test_that('calculate.matrices calls init.non.edge.values', {
+    mismatch.function <- function(first.letter, second.letter) 0
     with_mock(
               #stop init.first.col.and.row from modifying value.matrix
               init.first.col.and.row = function(matrices) matrices,
-              init.non.edge.values = function(matrices) list(value.matrix=matrix(data="pass", nrow=5,ncol=5), traceback.matrix=matrix()),
+              init.non.edge.values = function(matrices, mismatch.function) list(value.matrix=matrix(data="pass", nrow=5,ncol=5), traceback.matrix=matrix()),
               {
-                  out.matrices <- calculate.matrices(c('a','a'), c('a','t'))
+                  out.matrices <- calculate.matrices(c('a','a'), c('a','t'), mismatch.function)
                   expect_that(out.matrices$value.matrix[1,1], equals("pass"))
               }
     )

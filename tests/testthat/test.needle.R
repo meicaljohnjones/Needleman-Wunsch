@@ -119,8 +119,9 @@ test_that('needle() returns a needleman.wunsch.result object populated with valu
   seq2 <- c("A", "B", "C")
 
   with_mock(
+    create.mm.function=function(match.score, mismatch.score) return(function(first.letter, second.letter) 0),
     string.to.char.vector=function(sequence) sequence,
-    calculate.matrices=function(first.sequence, second.sequence) {
+    calculate.matrices=function(first.sequence, second.sequence, mismatch.function) {
       list(value.matrix=matrix(data=1:9, nrow=3, ncol=3), traceback.matrix=matrix(data="diag", nrow=3, ncol=3))
     },
     calculate.alignment=function(matrices) list(alignment1=c('A', 'B', 'C'), alignment2=c('A','B', 'C')),
