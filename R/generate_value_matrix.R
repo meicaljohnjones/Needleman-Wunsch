@@ -8,7 +8,6 @@ calculate.matrices <- function(first.sequence, second.sequence) {
    rownames(traceback.matrix) <- c('*', second.sequence)
 
    matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
-   #TODO calculate traceback matrix by passing in list to all functions
 
    matrices <- init.first.col.and.row(matrices)
    matrices <- init.non.edge.values(matrices)
