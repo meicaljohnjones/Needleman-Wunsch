@@ -46,7 +46,7 @@ calculate.alignment <- function(matrices) {
     } else if (traceback.direction == "left") {
       i <- i - 1
     } else if (traceback.direction == "up") {
-      y <- y - 1
+      j <- j - 1
     }
   }
   list(alignment1=alignment1, alignment2=alignment2)
