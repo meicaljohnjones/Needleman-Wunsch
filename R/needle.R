@@ -1,5 +1,22 @@
-needle <- function(seq1, seq2, gap, match, mismatch) {
+needle <- function(seq1, seq2, gap=-1, match=1, mismatch=0) {
+  seq1 <- string.to.char.vector(seq1)
+  seq2 <- string.to.char.vector(seq2)
 
+  matrices <- calculate.matrices(seq1, seq2)
+  alignments <- calculate.alignment(matrices)
+  maxscore <- calculate.maxscore(matrices)
+
+  # return the "needleman.wunsch.result" object
+  structure(
+    list(
+      alignment1=alignments$alignment1,
+      alignment2=alignments$alignment2,
+      maxscore=maxscore,
+      score.matrix=matrices$value.matrix,
+      traceback.matrix=matrices$traceback.matrix
+    ),
+    class="needleman.wunsch.result"
+  )
 }
 
 calculate.alignment <- function(matrices) {

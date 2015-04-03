@@ -113,3 +113,31 @@ test_that('tring.to.char.vector leaves vector of characters as it is', {
 
 })
 
+test_that('needle() returns a needleman.wunsch.result object populated with values etc.', {
+  # given
+  seq1 <- c("A", "B", "C")
+  seq2 <- c("A", "B", "C")
+
+  with_mock(
+    string.to.char.vector=function(sequence) sequence,
+    calculate.matrices=function(first.sequence, second.sequence) {
+      list(value.matrix=matrix(data=1:9, nrow=3, ncol=3), traceback.matrix=matrix(data="diag", nrow=3, ncol=3))
+    },
+    calculate.alignment=function(matrices) list(alignment1=c('A', 'B', 'C'), alignment2=c('A','B', 'C')),
+    calculate.maxscore=function(matrices) 9,
+    {
+      # when
+      result <- NULL
+      result <- needle(seq1=seq1, seq2=seq2) # default params for gap, match and mismatch
+
+
+      # then
+      expect_that(class(result), equals("needleman.wunsch.result"))
+      expect_that(result$alignment1, equals(c('A', 'B', 'C')))
+      expect_that(result$alignment2, equals(c('A', 'B', 'C')))
+      expect_that(result$maxscore, equals(9))
+      expect_that(result$score.matrix, equals(matrix(data=1:9, nrow=3, ncol=3)))
+      expect_that(result$traceback.matrix, equals(matrix(data="diag", nrow=3, ncol=3)))
+  })
+
+})
