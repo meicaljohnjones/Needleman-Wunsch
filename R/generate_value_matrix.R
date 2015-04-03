@@ -10,7 +10,7 @@ calculate.matrices <- function(first.sequence, second.sequence, mismatch.functio
    matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
 
    matrices <- init.first.col.and.row(matrices, gap)
-   matrices <- init.non.edge.values(matrices, mismatch.function)
+   matrices <- init.non.edge.values(matrices, mismatch.function, gap)
 
    matrices
 }
@@ -42,12 +42,12 @@ init.first.col.and.row <- function(matrices, gap) {
     matrices
 }
 
-calculate.value.top <- function(value.matrix, i, j) {
-    value.matrix[j-1, i] + 1
+calculate.value.top <- function(value.matrix, i, j, gap) {
+    value.matrix[j-1, i] + gap
 }
 
-calculate.value.left <- function(value.matrix, i, j) {
-    value.matrix[j, i-1] + 1
+calculate.value.left <- function(value.matrix, i, j, gap) {
+    value.matrix[j, i-1] + gap
 }
 
 calculate.value.mismatch <- function(value.matrix, i, j, mismatch.function) {
@@ -58,13 +58,13 @@ calculate.value.mismatch <- function(value.matrix, i, j, mismatch.function) {
     value.matrix[j-1, i-1] + mismatch.factor
 }
 
-calculate.values <- function(value.matrix, i, j, mismatch.function) {
+calculate.values <- function(value.matrix, i, j, mismatch.function, gap) {
   if (i < 2) stop('i must be greater than or equal to 2')
   if (j < 2) stop('j must be greater than or equal to 2')
 
   c(
-    value.top=calculate.value.top(value.matrix, i, j),
-    value.left=calculate.value.left(value.matrix, i, j),
+    value.top=calculate.value.top(value.matrix, i, j, gap),
+    value.left=calculate.value.left(value.matrix, i, j, gap),
     value.mismatch=calculate.value.mismatch(value.matrix, i, j, mismatch.function)
   )
 }
@@ -83,13 +83,13 @@ calculate.traceback.direction <- function(top.left.and.mismatch.values) {
   }
 }
 
-init.non.edge.values <- function(matrices, mismatch.function) {
+init.non.edge.values <- function(matrices, mismatch.function, gap) {
     value.matrix <- matrices$value.matrix
     traceback.matrix <- matrices$traceback.matrix
 
     for (i in 2:ncol(value.matrix)) {
         for (j in 2:nrow(value.matrix)) {
-            values <- calculate.values(value.matrix, i, j, mismatch.function)
+            values <- calculate.values(value.matrix, i, j, mismatch.function, gap)
             value.matrix[j,i] <- min(values)
             traceback.matrix[j,i] <- calculate.traceback.direction(values)
         }
