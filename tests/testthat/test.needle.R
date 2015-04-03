@@ -82,3 +82,34 @@ test_that('calculate.maxscore yields the bottom-right value of the value.matrix 
   expect_that(is.integer(result), equals(TRUE))
   expect_that(result, equals(9)) # bottom right value
 })
+
+test_that('tring.to.char.vector converts string to vector of chars', {
+  # given
+  sequence.string <- "ABC"
+
+  # when
+  result <- string.to.char.vector(sequence.string)
+  expect_that(is.character(result), equals(TRUE))
+  expect_that(length(result), equals(nchar(sequence.string)))
+
+  expect_that(result[1], equals("A"))
+  expect_that(result[2], equals("B"))
+  expect_that(result[3], equals("C"))
+
+})
+
+test_that('tring.to.char.vector leaves vector of characters as it is', {
+  # given
+  seq.vec <- c("A","B","C")
+
+  # when
+  result <- string.to.char.vector(seq.vec)
+  expect_that(is.character(result), equals(TRUE))
+  expect_that(length(result), equals(length(seq.vec)))
+
+  expect_that(result[1], equals("A"))
+  expect_that(result[2], equals("B"))
+  expect_that(result[3], equals("C"))
+
+})
+

@@ -54,3 +54,11 @@ calculate.maxscore <- function(matrices) {
 
   value.matrix[j, i]
 }
+
+string.to.char.vector <- function(sequence) {
+  if (length(sequence) > 1) {
+    return(sequence)
+  } else {
+    return(strsplit(sequence, "")[[1]])
+  }
+}
