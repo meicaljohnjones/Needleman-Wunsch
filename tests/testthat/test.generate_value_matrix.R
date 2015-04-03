@@ -3,7 +3,7 @@ test_that('calculate.matrices generates value matrix with length(first.sequence)
     second.sequence <- c('b','b')
     mismatch.function <- function(first.letter, second.letter) 0
 
-    output.matrices <- calculate.matrices(first.sequence, second.sequence, mismatch.function)
+    output.matrices <- calculate.matrices(first.sequence, second.sequence, mismatch.function, gap=1)
 
     value.matrix <- output.matrices$value.matrix
     expect_that(value.matrix, not(is_null()))
@@ -26,7 +26,7 @@ test_that('calculate.matrices labels col names using first.sequence and row name
     expected.cols <- c('*', first.sequence)
     expected.rows <- c('*', second.sequence)
 
-    output.matrices <- calculate.matrices(first.sequence, second.sequence, mismatch.function)
+    output.matrices <- calculate.matrices(first.sequence, second.sequence, mismatch.function, gap=1)
     value.matrix <- output.matrices$value.matrix
     traceback.matrix <- output.matrices$traceback.matrix
 
@@ -37,15 +37,16 @@ test_that('calculate.matrices labels col names using first.sequence and row name
     expect_that(expected.rows, equals(rownames(traceback.matrix)))
 })
 
-test_that('init.first.col.and.row fills value matrix first row and column correctly', {
+test_that('init.first.col.and.row fills value matrix first row and column correctly where gap = 1', {
     # given
     nrow <- 5
     ncol <- 6
+    gap <- 1
     value.matrix <- matrix(data = NA, nrow=nrow, ncol=ncol)
     traceback.matrix <- matrix(data = NA, nrow=nrow, ncol=ncol) # empty as we're not testing this
     matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
 
-    out.matrices <- init.first.col.and.row(matrices)
+    out.matrices <- init.first.col.and.row(matrices, gap)
     expect_that(typeof(out.matrices), equals("list"))
     out.matrices
 
@@ -55,13 +56,41 @@ test_that('init.first.col.and.row fills value matrix first row and column correc
 
     # test col values correct
     for (x in 1:ncol) { # 2 because first value is 'done'
-        expect_that(out.value.matrix[1,x], equals(x - 1))
+        expect_that(out.value.matrix[1,x], equals(x * gap))
     }
 
     # test row values correct
     for (y in 1:nrow) {
-        expect_that(out.value.matrix[y,1], equals(y - 1))
+        expect_that(out.value.matrix[y,1], equals(y * gap))
     }
+})
+
+test_that('init.first.col.and.row fills value matrix first row and column correctly where gap = 2', {
+  # given
+  nrow <- 5
+  ncol <- 6
+  gap <- 2
+  value.matrix <- matrix(data = NA, nrow=nrow, ncol=ncol)
+  traceback.matrix <- matrix(data = NA, nrow=nrow, ncol=ncol) # empty as we're not testing this
+  matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
+
+  out.matrices <- init.first.col.and.row(matrices, gap)
+  expect_that(typeof(out.matrices), equals("list"))
+  out.matrices
+
+  out.value.matrix <- out.matrices$value.matrix
+  expect_that(out.value.matrix, not(is_null()))
+
+
+  # test col values correct
+  for (x in 1:ncol) { # 2 because first value is 'done'
+    expect_that(out.value.matrix[1,x], equals(x * gap))
+  }
+
+  # test row values correct
+  for (y in 1:nrow) {
+    expect_that(out.value.matrix[y,1], equals(y * gap))
+  }
 })
 
 test_that('init.first.col.and.row fills traceback matrix first row and column correctly', {
@@ -73,7 +102,7 @@ test_that('init.first.col.and.row fills traceback matrix first row and column co
   matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
 
   # when
-  out.matrices <- init.first.col.and.row(matrices)
+  out.matrices <- init.first.col.and.row(matrices, gap=1)
 
   # then
   expect_that(typeof(out.matrices), equals("list"))
@@ -234,13 +263,13 @@ test_that('init.non.edge.values calls calculate.traceback.direction on non edge 
 test_that('calculate.matrices calls init.first.col.and.row', {
     mismatch.function <- function(first.letter, second.letter) 0
     with_mock(
-              init.first.col.and.row = function(matrices) {
+              init.first.col.and.row = function(matrices, gap) {
                 list(value.matrix=matrix(data="pass", nrow=5,ncol=5), traceback.matrix=matrix())
               },
               #stop init.non.edge.values from modifying value.matrix
               init.non.edge.values = function(value.matrix, mismatch.function) value.matrix,
               {
-                  out.matrices <- calculate.matrices(c('a','a'), c('a','t'), mismatch.function)
+                  out.matrices <- calculate.matrices(c('a','a'), c('a','t'), mismatch.function, gap=1)
                   expect_that(out.matrices$value.matrix[1,1], equals("pass"))
               }
     )
@@ -251,10 +280,10 @@ test_that('calculate.matrices calls init.non.edge.values', {
     mismatch.function <- function(first.letter, second.letter) 0
     with_mock(
               #stop init.first.col.and.row from modifying value.matrix
-              init.first.col.and.row = function(matrices) matrices,
+              init.first.col.and.row = function(matrices, gap) matrices,
               init.non.edge.values = function(matrices, mismatch.function) list(value.matrix=matrix(data="pass", nrow=5,ncol=5), traceback.matrix=matrix()),
               {
-                  out.matrices <- calculate.matrices(c('a','a'), c('a','t'), mismatch.function)
+                  out.matrices <- calculate.matrices(c('a','a'), c('a','t'), mismatch.function, gap=1)
                   expect_that(out.matrices$value.matrix[1,1], equals("pass"))
               }
     )

@@ -1,4 +1,4 @@
-calculate.matrices <- function(first.sequence, second.sequence, mismatch.function) {
+calculate.matrices <- function(first.sequence, second.sequence, mismatch.function, gap) {
    value.matrix <- matrix(ncol=length(first.sequence) + 1, nrow=length(second.sequence) + 1)
    colnames(value.matrix) <- c('*', first.sequence)
    rownames(value.matrix) <- c('*', second.sequence)
@@ -9,22 +9,20 @@ calculate.matrices <- function(first.sequence, second.sequence, mismatch.functio
 
    matrices <- list(value.matrix=value.matrix, traceback.matrix=traceback.matrix)
 
-   matrices <- init.first.col.and.row(matrices)
+   matrices <- init.first.col.and.row(matrices, gap)
    matrices <- init.non.edge.values(matrices, mismatch.function)
 
    matrices
 }
 
-init.first.col.and.row <- function(matrices) {
+init.first.col.and.row <- function(matrices, gap) {
     value.matrix <- matrices$value.matrix
-    value.matrix[1,1] <- 0
-
-    for (i in 2:ncol(value.matrix)) {
-        value.matrix[1,i] <- i - 1
+    for (i in 1:ncol(value.matrix)) {
+        value.matrix[1,i] <- i * gap
     }
 
     for (j in 2:nrow(value.matrix)) {
-        value.matrix[j,1] <- j - 1
+        value.matrix[j,1] <- j * gap
     }
 
     matrices$value.matrix <- value.matrix
