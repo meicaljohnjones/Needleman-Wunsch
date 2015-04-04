@@ -1,3 +1,4 @@
+#' @export
 needle <- function(seq1, seq2, gap=1, match=0, mismatch=1) {
   seq1 <- string.to.char.vector(seq1)
   seq2 <- string.to.char.vector(seq2)
