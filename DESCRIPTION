@@ -1,10 +1,11 @@
-Package: my.sequence.alignment
-Title: What the Package Does (one line, title case)
+Package: hiraethus.needleman.wunsch
+Title: An implementation of the Needleman-Wulsch sequence alignment algorithm, unit tested with testthat
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph)
+Authors@R: person("Michael", "Jones", , "mjclackjones@gmail.com", role = c("aut", "cre"))
+Description: Implements the Needleman-Wulsch sequence alignment algorithm using the needle function.
 Depends: R (>= 3.1.2)
-License: What license is it under?
+License: GPL-3
+URL: https://github.com/hiraethus/Needleman-Wunsch
 LazyData: true
 Imports:
 	testthat
