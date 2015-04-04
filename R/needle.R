@@ -21,6 +21,26 @@ needle <- function(seq1, seq2, gap = 0, match = 1, mismatch = 0) {
   )
 }
 
+#'@export
+print.needleman.wunsch.result <- function(needle.obj) {
+  maxscore <- needle.obj$maxscore
+  cat("Needleman-Wunsch Sequence Alignment\n")
+  cat("===================================\n")
+  cat(
+    sprintf("Alignment 1: %s\n", paste(needle.obj$alignment1, collapse=" ")),
+    sprintf("Alignment 2: %s\n", paste(needle.obj$alignment2, collapse=" ")),
+    sprintf("Max score  : %d\n",maxscore),
+    sep="")
+
+  cat("\n")
+  cat("Score matrix:\n")
+  print(needle.obj$score.matrix)
+
+  cat("\n")
+  cat("Traceback matrix:\n")
+  print(needle.obj$traceback.matrix)
+}
+
 calculate.alignment <- function(matrices) {
   alignment1 <- c()
   alignment2 <- c()
