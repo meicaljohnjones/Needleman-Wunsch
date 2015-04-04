@@ -1,5 +1,5 @@
 #' @export
-needle <- function(seq1, seq2, gap=1, match=0, mismatch=1) {
+needle <- function(seq1, seq2, gap = 0, match = 1, mismatch = 0) {
   seq1 <- string.to.char.vector(seq1)
   seq2 <- string.to.char.vector(seq2)
   mismatch.function <- create.mm.function(match.score=match, mismatch.score=mismatch)
