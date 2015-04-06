@@ -31,14 +31,6 @@ print.needleman.wunsch.result <- function(needle.obj) {
     sprintf("Alignment 2: %s\n", paste(needle.obj$alignment2, collapse=" ")),
     sprintf("Max score  : %d\n",maxscore),
     sep="")
-
-  cat("\n")
-  cat("Score matrix:\n")
-  print(needle.obj$score.matrix)
-
-  cat("\n")
-  cat("Traceback matrix:\n")
-  print(needle.obj$traceback.matrix)
 }
 
 calculate.alignment <- function(matrices) {
